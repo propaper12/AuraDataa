@@ -1,0 +1,22 @@
+services:
+  api:
+    build: .
+    ports:
+      - "${API_PORT:-8000}:8000" # Eğer 8000 doluysa .env'den API_PORT=8001 yapabilirsin
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+      - ./data:/app/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - PYTHONUNBUFFERED=1
+
+  ui:
+    image: nginx:alpine
+    ports:
+      - "${UI_PORT:-3000}:80" # Eğer 3000 doluysa .env'den UI_PORT=3001 yapabilirsin
+    volumes:
+      - ./web:/usr/share/nginx/html

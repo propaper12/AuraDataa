@@ -1,0 +1,9 @@
+id,product_name,price,stock_count
+1,Laptop,1500,20
+2,Mouse,25,100
+3,,15,200
+4,Keyboard,,50
+5,Monitor,300,
+6,Webcam,80,10
+7,,50,30
+8,Headphones,60,

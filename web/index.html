@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AuraData Sentinel | Premium Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg-deep: #0a0f18; --accent-emerald: #10b981; --text-muted: #94a3b8; }
+        body { background-color: var(--bg-deep); font-family: 'Inter', sans-serif; color: #f8fafc; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 70px; background: #0f172a; border-right: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column; align-items: center; padding: 20px 0; }
+        .nav-icon { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; border-radius: 12px; color: var(--text-muted); cursor: pointer; transition: all 0.3s; margin-bottom: 20px; }
+        .nav-icon.active { background: rgba(16, 185, 129, 0.1); color: var(--accent-emerald); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .plugin-container { flex-grow: 1; display: flex; flex-direction: column; background: radial-gradient(circle at top right, #1e293b, #0a0f18); }
+        .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; }
+        .terminal { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+        .pulse-emerald { animation: pulse-emerald 2s infinite; }
+        @keyframes pulse-emerald { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    </style>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="nav-icon active"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg></div>
+        <div class="nav-icon opacity-30"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2 1 3 3 3h10c2 0 3-1 3-3V7c0-2-1-3-3-3H7c-2 0-3 1-3 3z"></path></svg></div>
+    </aside>
+
+    <main class="plugin-container">
+        <header class="h-16 border-b border-white/5 flex items-center justify-between px-8 bg-black/20">
+            <div class="flex items-center gap-3"><span class="text-sm font-semibold tracking-tight">AuraData Control Center</span><span class="text-[10px] bg-emerald-500/10 text-emerald-500 px-2 py-0.5 rounded border border-emerald-500/20 uppercase font-bold">V1.0 Agentic</span></div>
+            <div class="flex bg-black/40 p-1 rounded-lg border border-white/10 text-[10px] font-bold">
+                <button id="lang-tr" class="px-3 py-1 rounded-md">TR</button>
+                <button id="lang-en" class="px-3 py-1 rounded-md bg-white/10">EN</button>
+            </div>
+        </header>
+
+        <div class="p-8 grid grid-cols-12 gap-6 h-[calc(100vh-64px)] overflow-y-auto">
+            <div class="col-span-12 xl:col-span-4 space-y-6">
+                <div class="glass-card p-6">
+                    <h3 id="txt-new-task" class="text-xs font-bold uppercase text-muted mb-4 tracking-widest">New Audit Task</h3>
+                    <textarea id="taskInput" class="w-full bg-black/40 border border-white/5 rounded-lg p-4 text-sm focus:outline-none focus:border-emerald-500/50 h-32 leading-relaxed">data/test_data.csv</textarea>
+                    <button id="runBtn" class="w-full mt-4 bg-emerald-600 hover:bg-emerald-500 text-white py-3 rounded-lg text-sm font-bold shadow-lg shadow-emerald-900/20 transition-all active:scale-95">INITIALIZE SENTINEL</button>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass-card p-4"><div class="text-xs text-muted mb-1 font-semibold">Quality Index</div><div id="qualityScore" class="text-2xl font-bold text-emerald-400">--%</div></div>
+                    <div class="glass-card p-4"><div class="text-xs text-muted mb-1 font-semibold">Status</div><div id="statusText" class="text-2xl font-bold text-white uppercase">Idle</div></div>
+                </div>
+            </div>
+
+            <div class="col-span-12 xl:col-span-8 space-y-6">
+                <div class="glass-card p-6 h-full flex flex-col min-h-[500px]">
+                    <h3 class="text-xs font-bold uppercase text-muted tracking-widest mb-4">Agent Autonomous Thread</h3>
+                    <div id="outputLog" class="flex-grow overflow-y-auto terminal p-4 bg-black/30 rounded-lg space-y-4 border border-white/5 text-emerald-400/80">
+                        // Sentinel v1.0 initialized. Ready for pulse.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const runBtn = document.getElementById('runBtn');
+        const outputLog = document.getElementById('outputLog');
+        const qualityScore = document.getElementById('qualityScore');
+        const statusText = document.getElementById('statusText');
+
+        runBtn.onclick = async () => {
+            const task = document.getElementById('taskInput').value;
+            outputLog.innerText = "// Connecting to AI Sentinel... Analyzing metrics locally.";
+            statusText.innerText = "Analyzing";
+            runBtn.disabled = true;
+
+            try {
+                const response = await fetch('http://localhost:8000/ask', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ query: task })
+                });
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    qualityScore.innerText = Math.round(result.data.quality_score * 100) + '%';
+                    outputLog.innerText = `[MISSION COMPLETE]\n\n${result.data.report}`;
+                    statusText.innerText = result.data.issue_found ? "Fix Req." : "Stable";
+                } else {
+                    outputLog.innerText = `[ERROR]: ${result.message}`;
+                    statusText.innerText = "Error";
+                }
+            } catch (err) {
+                outputLog.innerText = "[OFFLINE]: Backend unreachable. Run 'docker-compose up'";
+                statusText.innerText = "Offline";
+            } finally {
+                runBtn.disabled = false;
+            }
+        };
+    </script>
+</body>
+</html>
