@@ -29,9 +29,23 @@ async def ask_agent(user_query: UserQuery):
         return {"status": "error", "message": str(e)}
 
 # 2. UI (HTML) Sunumu
-# Gerekiyorsa 'web' klasörünü bağla
 if os.path.exists("web"):
     app.mount("/web", StaticFiles(directory="web"), name="web")
+
+# 3. Rapor Yönetimi
+if os.path.exists("reports"):
+    app.mount("/download", StaticFiles(directory="reports"), name="download")
+
+@app.get("/reports")
+async def list_reports():
+    """Arşivlenmiş PDF raporlarını listeler."""
+    try:
+        files = os.listdir("reports")
+        reports = [f for f in files if f.endswith(".pdf")]
+        reports.sort(reverse=True) # En yeniler üstte
+        return {"status": "success", "reports": reports}
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
 
 @app.get("/")
 async def read_index():

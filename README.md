@@ -1,60 +1,58 @@
-# 🛡️ AuraData AI: The Autonomous Data Quality Sentinel
+# 🛡️ AuraData Sentinel: Autonomous Data Quality Agent
 
-**AuraData AI** is an agentic data engineering framework designed to eliminate the manual burden of **Data Quality Monitoring and Root Cause Analysis.**
+**AuraData Sentinel**, veri mühendisliği projeleriniz için geliştirilmiş, **otonom** ve **genişletilebilir** bir Veri Kalitesi Denetçisi (Sentinel) eklentisidir. Geleneksel denetçilerin aksine, sadece hata bulmakla kalmaz; **LangGraph** ve **Llama 3 / Phi-3** kullanarak hataların kök nedenini (RCA) analiz eder ve çözüm önerileri sunar.
 
-Instead of reacting to broken dashboards, AuraData acts as an autonomous "Sentinel" that continuously audits your datasets, identifies quality drops, and uses AI to perform autonomous Root Cause Analysis (RCA) and suggest technical fixes.
+![Status](https://img.shields.io/badge/Status-Autonomous_Agent-emerald)
+![Tech](https://img.shields.io/badge/Tech-LangGraph_|_DuckDB_|_FastAPI-blue)
+![Mode](https://img.shields.io/badge/Mode-Universal_Plugin-orange)
 
----
+## 🚀 Öne Çıkan Özellikler
 
-## 🚀 The Vision: From Manual to Agentic
+- 🤖 **Agentic Workflow:** LangGraph tabanlı otonom döngü (Denetle -> Analiz Et -> Raporla).
+- 🔌 **Universal Connectors:** Kafka akışlarını, SQL veritabanlarını ve yerel dosyaları (CSV, Parquet, JSON) otonom olarak tanır ve denetler.
+- ⚡ **Ultra-Fast Audit:** DuckDB motoru sayesinde milisaniyeler içinde veri sağlığı metrikleri üretir.
+- 🧠 **AI-Powered RCA:** Veri kalitesindeki düşüşün nedenini yerel LLM (Ollama) ile otonom olarak açıklar.
+- 🎨 **Premium UI Dashboard:** Gerçek zamanlı izleme için karanlık tema, yüksek kaliteli "Plugin" arayüzü.
 
-**The Problem:** Data engineers spend 40% of their time debugging data quality issues (schema drifts, outlier spikes, null contamination).
+## 🛠️ "Plug & Play" Entegrasyonu
 
-**The Solution:** AuraData leverages **LangGraph** and **Local LLMs (Ollama)** to create a self-healing audit loop:
-1. **Audit:** Automated profiling via DuckDB.
-2. **Detect:** Real-time identification of quality drops below defined thresholds.
-3. **Analyze:** AI-driven RCA to find *exactly* why the data is broken.
-4. **Report:** Professional "Data Health Certificates" or "Fix Roadmaps" delivered autonomously.
+AuraData'yı kendi projenize (örn: Airflow, Spark veya Kafka pipeline) bir eklenti olarak eklemek için `docker-compose.yml` dosyanıza şu bloğu eklemeniz yeterlidir:
 
----
-
-## 🔥 Key Agentic Capabilities
-
-### 🕵️ 1. Autonomous Data Auditing
-The agent performs deep profiling (Null ratios, duplicate detection, distribution shifts) without needing pre-written validation scripts.
-
-### 🧠 2. AI Root Cause Analysis (RCA)
-Unlike standard alerts, AuraData analyzes the context. It can distinguish between a "source system change" and a "data corruption" event, saving hours of investigation.
-
-### 🛠️ 3. Fix Suggestions & Resolvers
-For every issue found, the agent provides a suggested fix (e.g., specific SQL logic or ingestion script updates) that the engineer can approve and implement.
-
-### ⚡ 4. Local & Secure (Ollama Powered)
-All data analysis stays local. AuraData connects to your host machine's Ollama instance, ensuring high-performance AI inference with 100% data privacy.
-
----
-
-## 🏗️ Technical Architecture
-
-AuraData is built on a **State-Graph Architecture**:
-- **Orchestration:** LangGraph (Reliable state cycles)
-- **Intelligence:** Ollama (Llama 3 / Mistral)
-- **Engine:** DuckDB (In-memory high-speed auditing)
-- **Interface:** Modern Glassmorphism Dashboard
-
----
-
-## 🏁 Quick Start
-
-```bash
-# 1. Start the Sentinel
-docker-compose up --build
-
-# 2. Monitor your /data folder
-# AuraData will automatically begin auditing your CSV/JSON/Parquet files.
+```yaml
+services:
+  auradata-sentinel:
+    image: propaper12/auradata:latest # Veya build: ./auradata
+    container_name: auradata_sentinel
+    ports:
+      - "3300:8000"
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    networks: [ your-data-network ]
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 ```
 
----
+## 📖 Kullanım Senaryoları
 
-**Developed with ❤️ for the Data Engineering Community.**
-*Making Data Quality Autonomous.*
+- **Kafka Akışı İzleme:** `kafka://sales_stream` yazın; ajan canlı akışı denetler.
+- **Veritabanı Sağlık Kontrolü:** `sql://orders_db` yazın; ajan şemayı ve veri tutarlılığını ölçer.
+- **Dosya Denetimi:** `data/test.csv` yazın; veri profilini anlık çıkarın.
+
+## 📦 Kurulum (Quick Start)
+
+1. **Bağımlılıkları Kurun (Ollama):**
+   ```bash
+   ollama pull phi3
+   ```
+2. **Sistemi Başlatın:**
+   ```bash
+   docker-compose up --build
+   ```
+3. **Dashboard'a Erişin:** `http://localhost:3300`
+
+## 👨‍💻 Geliştirici Notu (Junior to Senior Vision)
+Bu proje, veri boru hatlarında (Data Pipelines) insanın manuel müdahalesini azaltmak ve veri kalitesini "otonom bir ajan" seviyesine taşımak için mimari edilmiş bir **Engineering Solution**'dır.
+
+---
+⭐ Bu projeyi beğendiyseniz "Star" vermeyi unutmayın!
+🔗 **Bana Ulaşın:** [LinkedIn-Profil-Linkin]

@@ -10,3 +10,7 @@ pydantic
 python-dotenv
 python-multipart
 langchain-community
+kafka-python
+fpdf2
+yagmail
+apscheduler
