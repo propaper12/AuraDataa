@@ -1,58 +1,68 @@
-# 🛡️ AuraData Sentinel: Autonomous Data Quality Agent
+# 🛡️ AuraData Sentinel: Enterprise-Grade Autonomous Data Quality Agent
 
-**AuraData Sentinel**, veri mühendisliği projeleriniz için geliştirilmiş, **otonom** ve **genişletilebilir** bir Veri Kalitesi Denetçisi (Sentinel) eklentisidir. Geleneksel denetçilerin aksine, sadece hata bulmakla kalmaz; **LangGraph** ve **Llama 3 / Phi-3** kullanarak hataların kök nedenini (RCA) analiz eder ve çözüm önerileri sunar.
+**AuraData Sentinel**, veri mühendisliği ekosistemleri için tasarlanmış, **tam otonom** ve **gerçek zamanlı** bir Veri Kalitesi Güvenlik Katmanı'dır. Geleneksel izleme araçlarından farklı olarak AuraData; veri boru hatlarınıza (Kafka, SQL, File) bir **eklenti (plugin)** olarak takılır ve otonom kök neden analizi (RCA) yapar.
 
-![Status](https://img.shields.io/badge/Status-Autonomous_Agent-emerald)
-![Tech](https://img.shields.io/badge/Tech-LangGraph_|_DuckDB_|_FastAPI-blue)
-![Mode](https://img.shields.io/badge/Mode-Universal_Plugin-orange)
+![Scale](https://img.shields.io/badge/Scale-Enterprise-blue)
+![Intelligence](https://img.shields.io/badge/Intelligence-Autonomous_AI-emerald)
+![Reliability](https://img.shields.io/badge/Reliability-Atomic_Health_Check-orange)
 
-## 🚀 Öne Çıkan Özellikler
+## 🔌 Kurumsal Entegrasyon (Plugin Mode)
 
-- 🤖 **Agentic Workflow:** LangGraph tabanlı otonom döngü (Denetle -> Analiz Et -> Raporla).
-- 🔌 **Universal Connectors:** Kafka akışlarını, SQL veritabanlarını ve yerel dosyaları (CSV, Parquet, JSON) otonom olarak tanır ve denetler.
-- ⚡ **Ultra-Fast Audit:** DuckDB motoru sayesinde milisaniyeler içinde veri sağlığı metrikleri üretir.
-- 🧠 **AI-Powered RCA:** Veri kalitesindeki düşüşün nedenini yerel LLM (Ollama) ile otonom olarak açıklar.
-- 🎨 **Premium UI Dashboard:** Gerçek zamanlı izleme için karanlık tema, yüksek kaliteli "Plugin" arayüzü.
-
-## 🛠️ "Plug & Play" Entegrasyonu
-
-AuraData'yı kendi projenize (örn: Airflow, Spark veya Kafka pipeline) bir eklenti olarak eklemek için `docker-compose.yml` dosyanıza şu bloğu eklemeniz yeterlidir:
+AuraData Sentinel bir "standalone" uygulama değil, bir **Data Engineering Plugin**'dir. Mevcut `docker-compose.yml` dosyanıza şu bloğu ekleyerek sisteminize bir "denetçi" atayabilirsiniz:
 
 ```yaml
 services:
+  # AuraData Otonom Bekçi Eklentisi
   auradata-sentinel:
-    image: propaper12/auradata:latest # Veya build: ./auradata
+    image: propaper12/auradata-sentinel:latest # Docker Hub üzerinden saniyeler içinde çekin
     container_name: auradata_sentinel
     ports:
-      - "3300:8000"
+      - "${AURA_PORT:-3300}:8000"
     environment:
       - OLLAMA_BASE_URL=http://host.docker.internal:11434
-    networks: [ your-data-network ]
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - SENTINEL_EMAIL_TARGET=${ALERT_EMAIL}
+    networks: 
+      - your_data_network # Kafka/Postgres ağınıza dahil edin
     extra_hosts:
       - "host.docker.internal:host-gateway"
 ```
 
-## 📖 Kullanım Senaryoları
+## 📖 Veri Kaynaklarını Bağlama Rehberi (Connection Guide)
 
-- **Kafka Akışı İzleme:** `kafka://sales_stream` yazın; ajan canlı akışı denetler.
-- **Veritabanı Sağlık Kontrolü:** `sql://orders_db` yazın; ajan şemayı ve veri tutarlılığını ölçer.
-- **Dosya Denetimi:** `data/test.csv` yazın; veri profilini anlık çıkarın.
+Ajan, arayüzdeki komut satırına yazdığınız prefix'e göre otonom konnektörünü seçer:
 
-## 📦 Kurulum (Quick Start)
+| Kaynak Türü | Komut Formatı | Açıklama |
+| :--- | :--- | :--- |
+| **Kafka** | `kafka://broker:port/topic` | Canlı veri akışlarındaki null ve şema sapmalarını denetler. |
+| **SQL DB** | `sql://host:port/database` | Postgres, MySQL vb. veritabanlarındaki tablo sağlığını ölçer. |
+| **Local Files** | `data/filename.parquet` | Yerel CSV, Parquet veya JSON dosyalarını anlık profiller. |
+| **Cloud S3** | `s3://bucket/path` | (V1.5+ Yakında) Bulut depolama alanlarını otonom tarar. |
 
-1. **Bağımlılıkları Kurun (Ollama):**
-   ```bash
-   ollama pull phi3
-   ```
-2. **Sistemi Başlatın:**
-   ```bash
-   docker-compose up --build
-   ```
-3. **Dashboard'a Erişin:** `http://localhost:3300`
+## 🧩 Desteklenen Ekosistemler (Compatibility)
 
-## 👨‍💻 Geliştirici Notu (Junior to Senior Vision)
-Bu proje, veri boru hatlarında (Data Pipelines) insanın manuel müdahalesini azaltmak ve veri kalitesini "otonom bir ajan" seviyesine taşımak için mimari edilmiş bir **Engineering Solution**'dır.
+- **Pipelines:** Apache Airflow, Dagster, Prefect ile uyumlu tetiklenebilir.
+- **Processing:** Spark, Flink veya dbt çıktılarını denetlemek için idealdir.
+- **Storage:** MinIO, Postgres, TimescaleDB ve Kafka ekosistemlerine tam destek.
+- **Platforms:** Docker Desktop (Windows/Mac) ve Linux Server ortamlarında sorunsuz çalışır.
+
+## 🌟 Neden AuraData Sentinel?
+
+1. **Otonom RCA:** Sadece "Hata var" demez, LLM gücüyle "Neden Var?" sorusunu teknik olarak yanıtlar.
+2. **Sıfır Veri Sızıntısı:** Analiz yerel modelinizde (Ollama) yapılır, verileriniz asla internete çıkmaz.
+3. **Milisaniyelik Ölçüm:** DuckDB motoru sayesinde GB'larca veriyi saniyeler içinde tarar.
+4. **Zamanlanmış Denetim:** Scheduler ile her 10 dakikada bir kendi kendine denetim yapar ve PDF raporunuzu mail kutunuza atar.
+
+## 🏁 Hızlı Başlangıç (Standalone Mode)
+
+Eklentiyi bağımsız olarak test etmek için:
+1. `ollama pull phi3`
+2. `docker-compose up --build`
+3. Tarayıcıdan: `http://localhost:3300`
 
 ---
-⭐ Bu projeyi beğendiyseniz "Star" vermeyi unutmayın!
-🔗 **Bana Ulaşın:** [LinkedIn-Profil-Linkin]
+⭐ **Yıldız Vererek Destek Olun:** Bu otonom çözüm veri kalitesine bakış açınızı değiştirdiyse star vermeyi unutmayın!
+
+🔗 **LinkedIn:** [Profil Linkin]
+🔗 **Medium:** [Blog Yazısı Linkin]
