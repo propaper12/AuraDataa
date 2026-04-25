@@ -1,10 +1,12 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from core.agent import agent_executor
-import json
+import os
 
-app = FastAPI(title="AuraData Sentinel SPI", version="0.3.0")
+app = FastAPI(title="AuraData Sentinel SPI", version="1.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -17,16 +19,20 @@ app.add_middleware(
 class UserQuery(BaseModel):
     query: str
 
-@app.get("/")
-async def root():
-    return {"status": "ok"}
-
+# 1. API Endpoint
 @app.post("/ask")
 async def ask_agent(user_query: UserQuery):
-    """Basit ve hatasız endpoint."""
     try:
-        # Ajanı çalıştır
         result = agent_executor.invoke({"task": user_query.query, "iterations": 0})
         return {"status": "success", "data": result}
     except Exception as e:
         return {"status": "error", "message": str(e)}
+
+# 2. UI (HTML) Sunumu
+# Gerekiyorsa 'web' klasörünü bağla
+if os.path.exists("web"):
+    app.mount("/web", StaticFiles(directory="web"), name="web")
+
+@app.get("/")
+async def read_index():
+    return FileResponse('web/index.html')
