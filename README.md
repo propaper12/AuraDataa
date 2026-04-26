@@ -66,3 +66,7 @@ Eklentiyi bağımsız olarak test etmek için:
 
 🔗 **LinkedIn:** [Profil Linkin]
 🔗 **Medium:** [Blog Yazısı Linkin]
+<img width="2794" height="1531" alt="Ekran görüntüsü 2026-04-25 163210" src="https://github.com/user-attachments/assets/fb91b061-f04a-4519-bb3c-33882791cc50" />
+<img width="2679" height="1452" alt="Ekran görüntüsü 2026-04-25 163237" src="https://github.com/user-attachments/assets/80f14f03-afdf-42ac-bace-47238f10d64f" />
+<img width="2789" height="1549" alt="Ekran görüntüsü 2026-04-25 163319" src="https://github.com/user-attachments/assets/02e93a04-1a78-42bc-95bb-f1625e5e62b5" />
+<img width="2784" height="1550" alt="Ekran görüntüsü 2026-04-25 163203" src="https://github.com/user-attachments/assets/8839a899-f734-49e3-8319-bf41f9f6d5dc" />
